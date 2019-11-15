@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace DeltaCompressionDotNet.Tests
 {
@@ -40,7 +40,7 @@ namespace DeltaCompressionDotNet.Tests
 
             var actualHash = HashFile(_privateFinalPath);
 
-            CollectionAssert.AreEqual(_expectedHash, actualHash);
+            Assert.AreEqual(_expectedHash, actualHash);
         }
 
         public void TestCleanup()

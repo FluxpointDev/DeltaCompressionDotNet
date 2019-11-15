@@ -6,9 +6,9 @@ namespace DeltaCompressionDotNet.Tests
 {
     internal sealed class RandomFile : IDisposable
     {
-        public string FileName { get; private set; }
+        public string FileName { get; }
 
-        private string FilePath { get; set; }
+        private string FilePath { get; }
 
         public RandomFile(string baseFolderPath)
         {

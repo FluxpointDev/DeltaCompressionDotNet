@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Runtime.InteropServices;
+using NUnit.Framework;
 
 namespace DeltaCompressionDotNet.Tests
 {
@@ -17,9 +18,11 @@ namespace DeltaCompressionDotNet.Tests
 
         private readonly List<CompressionTest> _compressionTests = new List<CompressionTest>();
 
-        [TestInitialize]
+        [SetUp]
         public void TestInitialize()
         {
+            Assert.True(RuntimeInformation.IsOSPlatform(OSPlatform.Windows), "Test not being run on Windows, this is a windows only api");
+            
             _compressionTests.Clear();
 
             var systemFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.System);
@@ -32,14 +35,14 @@ namespace DeltaCompressionDotNet.Tests
             _compressionTests.Add(new CompressionTest(mediaFolderPath, Alarm01FileName, Alarm02FileName));
         }
 
-        [TestCleanup]
+        [TearDown]
         public void TestCleanup()
         {
             foreach (var compressionTest in _compressionTests)
                 compressionTest.TestCleanup();
         }
 
-        [ExpectedException(typeof (Win32Exception)), TestMethod]
+        [Test]
         public void ApplyDelta_Calls_GetLastError()
         {
             var deltaCompression = new TDeltaCompression();
@@ -51,12 +54,10 @@ namespace DeltaCompressionDotNet.Tests
             catch (Win32Exception exception)
             {
                 Assert.AreNotEqual(0, exception.NativeErrorCode);
-
-                throw;
             }
         }
 
-        [ExpectedException(typeof (Win32Exception)), TestMethod]
+        [Test]
         public void CreateDelta_Calls_GetLastError()
         {
             var deltaCompression = new TDeltaCompression();
@@ -68,12 +69,10 @@ namespace DeltaCompressionDotNet.Tests
             catch (Win32Exception exception)
             {
                 Assert.AreNotEqual(0, exception.NativeErrorCode);
-
-                throw;
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CreateDelta_And_ApplyDelta_Creates_And_Applies_Delta()
         {
             var deltaCompression = new TDeltaCompression();
@@ -82,7 +81,7 @@ namespace DeltaCompressionDotNet.Tests
                 compressionTest.CreateAndApplyDelta(deltaCompression);
         }
 
-        [TestMethod]
+        [Test]
         public void CreateDelta_And_ApplyDelta_Handle_Big_Files()
         {
             var baseFolderPath = Path.GetTempPath();
