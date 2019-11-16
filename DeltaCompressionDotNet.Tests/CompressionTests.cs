@@ -21,8 +21,10 @@ namespace DeltaCompressionDotNet.Tests
         [SetUp]
         public void TestInitialize()
         {
+#if NETSTANDARD
             Assert.True(RuntimeInformation.IsOSPlatform(OSPlatform.Windows), "Test not being run on Windows, this is a windows only api");
-            
+#endif
+
             _compressionTests.Clear();
 
             var systemFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.System);
